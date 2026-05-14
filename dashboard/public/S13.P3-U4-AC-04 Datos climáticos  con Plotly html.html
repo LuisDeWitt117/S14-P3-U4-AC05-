@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S13-P3-U4-AC-04 Visualización con Gráficos Polares en Plotly</title>
+    <style>
+        /* ===== ESTILOS INSTITUCIONALES UCOL ===== */
+        :root {
+            --ucol-green: #00573F;
+            --ucol-gold: #D4A017;
+            --ucol-light: #E8F5EE;
+            --ucol-dark: #003326;
+            --white: #FFFFFF;
+            --code-bg: #2d3436;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F4F7F6;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--ucol-dark), var(--ucol-green));
+            color: var(--white);
+            padding: 3rem 1rem;
+            text-align: center;
+            border-bottom: 6px solid var(--ucol-gold);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--ucol-green);
+            border-left: 5px solid var(--ucol-gold);
+            padding-left: 15px;
+            margin-top: 2rem;
+            text-transform: uppercase;
+        }
+
+        .step-box {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .highlight {
+            color: #d35400;
+            font-weight: bold;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #fab1a0;
+            padding: 1.2rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+        }
+
+        .badge {
+            background: var(--ucol-gold);
+            color: var(--ucol-dark);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th { background: var(--ucol-green); color: white; padding: 10px; text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
+
+        footer {
+            background-color: var(--ucol-dark);
+            color: #FFFF00;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .warning-box {
+            border: 2px solid var(--ucol-gold);
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #fffdf2;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>S13-P3-U4-AC-04 Visualización con Gráficos Polares en Plotly</h1>
+    <h4>Exploración de Datos Climáticos mediante Gráficos Polares con Plotly</h4>
+</header>
+
+<div class="container">
+
+    <div class="warning-box">
+        <strong>El desarrollo de esta actividad depende enteramente de ti. ¡No olvides organizar tus tiempos y respetar la integridad académica!</strong>
+    </div>
+
+    <section>
+        <h2>1. Introducción</h2>
+        <p>En el análisis de datos meteorológicos y cíclicos, los gráficos tradicionales a menudo fallan al representar direcciones (ángulos) o periodicidad. <strong>Plotly</strong> ofrece herramientas potentes para crear <strong>Gráficos Polares</strong>, que utilizan un sistema de coordenadas circulares donde cada punto se determina por una distancia al centro (radio) y un ángulo.</p>
+        <p>En esta práctica, exploraremos el dataset "Wind" para representar la fuerza y dirección del viento mediante tres variantes interactivas: dispersión, líneas y barras (rosas de los vientos).</p>
+    </section>
+
+    <section>
+        <h2>2. Objetivo de la Práctica</h2>
+        <p>Al finalizar esta práctica, el estudiante será capaz de:</p>
+        <ul>
+            <li>Cargar y analizar datasets integrados en la librería <strong>Plotly Express</strong>[cite: 1, 4].</li>
+            <li>Identificar variables adecuadas para coordenadas polares (Radio vs. Ángulo)[cite: 20].</li>
+            <li>Construir y personalizar gráficos <code>scatter_polar</code>, <code>line_polar</code> y <code>bar_polar</code>.</li>
+            <li>Exportar visualizaciones interactivas a formatos web autónomos (HTML)[cite: 34].</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>3. Materiales</h2>
+        <div class="keywords">
+            <span class="badge">Python 3.x</span>
+            <span class="badge">Pandas</span>
+            <span class="badge">Plotly</span>
+            <span class="badge">Jupyter Notebook / Colab</span>
+        </div>
+        <p>Se requiere una conexión a internet para cargar el dataset y la documentación de Plotly[cite: 12].</p>
+    </section>
+
+    <section>
+        <h2>4. Desarrollo de la Práctica Paso a Paso</h2>
+
+        <div class="step-box">
+            <h3>Paso 1: Carga de Datos Climáticos</h3>
+            <p>Plotly incluye datasets de prueba. Utilizaremos <code>wind()</code>, que contiene información sobre la dirección del viento y su intensidad.</p>
+            <pre>
+import plotly.express as px
+
+# Cargar el dataset integrado
+wind_df = px.data.wind()
+
+# Inspección inicial
+print(wind_df.head())
+print(wind_df.info())</pre>
+            <p><strong>Nota:</strong> Observa las columnas <code>direction</code> (dirección cardinal), <code>strength</code> (fuerza) y <code>frequency</code> (frecuencia de ocurrencia)[cite: 16, 18].</p>
+        </div>
+
+        <div class="step-box">
+            <h3>Paso 2: Gráfico de Dispersión Polar (Scatter Polar)</h3>
+            <p>Este gráfico es ideal para ver la distribución de puntos individuales. Usaremos <code>r</code> para la magnitud y <code>theta</code> para la dirección angular.</p>
+            <pre>
+fig1 = px.scatter_polar(wind_df, 
+                        r="strength", 
+                        theta="direction", 
+                        color="strength",
+                        symbol="direction",
+                        size="frequency",
+                        title="Dispersión Polar: Fuerza vs Dirección del Viento")
+fig1.show()</pre>
+        </div>
+
+        <div class="step-box">
+            <h3>Paso 3: Gráfico de Líneas Polar (Line Polar)</h3>
+            <p>Útil para observar tendencias continuas o cierres de ciclos. En este caso, conectaremos los niveles de fuerza por dirección.</p>
+            <pre>
+fig2 = px.line_polar(wind_df, 
+                      r="strength", 
+                      theta="direction", 
+                      color="strength",
+                      line_close=True, # Cierra el círculo de la línea
+                      title="Tendencia Polar: Intensidad por Dirección")
+fig2.show()</pre>
+        </div>
+
+        <div class="step-box">
+            <h3>Paso 4: Gráfico de Barras Polar (Wind Rose)</h3>
+            <p>Este es el estándar para representar la dirección del viento (Rosa de los vientos). Las barras se extienden desde el centro según su magnitud.</p>
+            <pre>
+fig3 = px.bar_polar(wind_df, 
+                    r="frequency", 
+                    theta="direction", 
+                    color="strength",
+                    color_discrete_sequence=px.colors.sequential.Plasma_r,
+                    title="Rosa de los Vientos: Frecuencia por Dirección")
+fig3.show()</pre>
+        </div>
+
+        <div class="step-box">
+            <h3>Paso 5: Personalización Avanzada y Exportación</h3>
+            <p>Ajustaremos la apariencia del gráfico para un reporte profesional y guardaremos los resultados como archivos HTML interactivos.</p>
+            <pre>
+# Ejemplo de personalización del diseño
+fig3.update_layout(
+    font_size=12,
+    legend_font_size=10,
+    polar_angularaxis_rotation=90, # Rota el gráfico 90 grados
+)
+
+# Guardar como HTML
+fig1.write_html("polar_scatter.html")
+fig2.write_html("polar_line.html")
+fig3.write_html("polar_bar.html")</pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>5. Preguntas para el Análisis</h2>
+        <p>Después de realizar las visualizaciones, responde lo siguiente</p>
+        <ol>
+            <li>¿Qué patrones de dirección del viento predominantes observas en el gráfico de barras polar? </li>
+            <li>¿Cuál de las tres representaciones (dispersión, línea o barra) consideras que comunica mejor la intensidad del viento y por qué? </li>
+            <li>¿Por qué es necesario usar un sistema de coordenadas polares en lugar de un gráfico de barras tradicional (rectangular) para datos de viento? </li>
+            <li>Investiga: ¿Qué representan los argumentos <code>r</code> y <code>theta</code> en la función <code>px.scatter_polar</code>?</li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>6. Entregables</h2>
+        <p>Al finalizar, sube a la plataforma los siguientes elementos</p>
+        <ul>
+            <li><strong>Jupyter Notebook (.ipynb):</strong> Con el código completo, las gráficas generadas y el análisis de resultados.</li>
+            <li><strong>Archivos HTML (x3):</strong> Los archivos exportados en el Paso 5 para verificar la interactividad.</li>
+        </ul>
+        <p><strong>Fecha límite:</strong> Martes, 29 de abril de 2025, a las 23:59</p>
+    </section>
+
+    <section>
+        <h2>7. Rúbrica de Evaluación</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Criterio</th>
+                    <th>Excelente (10)</th>
+                    <th>Bueno (8)</th>
+                    <th>Mejorable (6)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Carga y Exploración</strong></td>
+                    <td>Dataset correctamente cargado y analizado con head() e info(). </td>
+                    <td>Errores menores en la exploración de variables. </td>
+                    <td>No se realiza exploración previa de los datos. </td>
+                </tr>
+                <tr>
+                    <td><strong>Creación de Gráficos</strong></td>
+                    <td>Los tres gráficos (scatter, line, bar) funcionan y son correctos.</td>
+                    <td>Solo dos gráficos funcionan correctamente. </td>
+                    <td>Uno o ningún gráfico funciona. </td>
+                </tr>
+                <tr>
+                    <td><strong>Interpretación</strong></td>
+                    <td>Análisis claro, profundo y responde todas las preguntas. </td>
+                    <td>Interpretación básica de los resultados. </td>
+                    <td>No hay interpretación o es irrelevante. </td>
+                </tr>
+                <tr>
+                    <td><strong>Exportación</strong></td>
+                    <td>Se entregan los 3 archivos HTML funcionales. </td>
+                    <td>Falta algún archivo HTML o no son interactivos. </td>
+                    <td>No se entregan archivos exportados. </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+</div>
+
+<footer>
+    UNIVERSIDAD DE COLIMA - FIME - INGENIERÍA EN COMPUTACIÓN INTELIGENTE - ANÁLISIS Y VISUALIZACIÓN DE DATOS - 2026
+</footer>
+
+</body>
+</html>
